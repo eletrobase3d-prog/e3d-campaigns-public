@@ -1,0 +1,246 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum OrganizationStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum OrganizationRole {
+  OWNER
+  ADMIN
+  MANAGER
+  ANALYST
+}
+
+enum CampaignStatus {
+  DRAFT
+  SCHEDULED
+  ACTIVE
+  PAUSED
+  FINISHED
+  CANCELLED
+}
+
+enum ParticipantStatus {
+  ACTIVE
+  BLOCKED
+  DISQUALIFIED
+}
+
+enum ReferralStatus {
+  PENDING
+  VALID
+  INVALID
+  FRAUD
+  CANCELLED
+}
+
+model User {
+  id           String             @id @default(uuid()) @db.Uuid
+  name         String             @db.VarChar(150)
+  email        String             @unique @db.VarChar(255)
+  passwordHash String             @map("password_hash")
+  status       UserStatus         @default(ACTIVE)
+  createdAt    DateTime           @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime           @updatedAt @map("updated_at") @db.Timestamptz
+  memberships  OrganizationUser[]
+
+  @@map("users")
+}
+
+model Organization {
+  id          String              @id @default(uuid()) @db.Uuid
+  name        String              @db.VarChar(150)
+  slug        String              @unique @db.VarChar(120)
+  status      OrganizationStatus  @default(ACTIVE)
+  createdAt   DateTime            @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime            @updatedAt @map("updated_at") @db.Timestamptz
+
+  users        OrganizationUser[]
+  campaigns    Campaign[]
+  participants Participant[]
+  referrals    Referral[]
+  referralClicks ReferralClick[]
+  auditLogs    AuditLog[]
+
+  @@map("organizations")
+}
+
+model OrganizationUser {
+  id             String           @id @default(uuid()) @db.Uuid
+  organizationId String           @map("organization_id") @db.Uuid
+  userId         String           @map("user_id") @db.Uuid
+  role           OrganizationRole @default(MANAGER)
+  createdAt      DateTime         @default(now()) @map("created_at") @db.Timestamptz
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@index([userId])
+  @@map("organization_users")
+}
+
+model Campaign {
+  id                   String         @id @default(uuid()) @db.Uuid
+  organizationId       String         @map("organization_id") @db.Uuid
+  name                 String         @db.VarChar(160)
+  slug                 String         @db.VarChar(160)
+  title                String?        @db.VarChar(255)
+  subtitle             String?        @db.VarChar(255)
+  description          String?
+  status               CampaignStatus @default(DRAFT)
+  startsAt             DateTime?      @map("starts_at") @db.Timestamptz
+  endsAt               DateTime?      @map("ends_at") @db.Timestamptz
+  timezone             String         @default("America/Sao_Paulo") @db.VarChar(60)
+  referralCodePrefix   String?        @map("referral_code_prefix") @db.VarChar(10)
+  maxParticipants      Int?           @map("max_participants")
+  createdAt            DateTime       @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt            DateTime       @updatedAt @map("updated_at") @db.Timestamptz
+
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  rules        CampaignRule?
+  rewards      CampaignReward[]
+  participants Participant[]
+  referrals    Referral[]
+  referralClicks ReferralClick[]
+
+  @@unique([organizationId, slug])
+  @@index([organizationId, status])
+  @@map("campaigns")
+}
+
+model CampaignRule {
+  id                         String   @id @default(uuid()) @db.Uuid
+  campaignId                 String   @unique @map("campaign_id") @db.Uuid
+  referralRequiresRegistration Boolean @default(true) @map("referral_requires_registration")
+  allowSelfReferral          Boolean  @default(false) @map("allow_self_referral")
+  minValidityHours           Int      @default(0) @map("min_validity_hours")
+  requiresManualApproval     Boolean  @default(false) @map("requires_manual_approval")
+  maxReferralsPerParticipant Int?     @map("max_referrals_per_participant")
+  requireUniquePhone         Boolean  @default(true) @map("require_unique_phone")
+  requireUniqueEmail         Boolean  @default(false) @map("require_unique_email")
+  createdAt                  DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt                  DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@map("campaign_rules")
+}
+
+model CampaignReward {
+  id            String   @id @default(uuid()) @db.Uuid
+  campaignId    String   @map("campaign_id") @db.Uuid
+  positionStart Int?     @map("position_start")
+  positionEnd   Int?     @map("position_end")
+  rewardType    String   @map("reward_type") @db.VarChar(30)
+  title         String   @db.VarChar(150)
+  monetaryValue Decimal? @map("monetary_value") @db.Decimal(12, 2)
+  description   String?
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@index([campaignId])
+  @@map("campaign_rewards")
+}
+
+model Participant {
+  id             String            @id @default(uuid()) @db.Uuid
+  organizationId String            @map("organization_id") @db.Uuid
+  campaignId     String            @map("campaign_id") @db.Uuid
+  name           String            @db.VarChar(150)
+  email          String?           @db.VarChar(255)
+  phone          String?           @db.VarChar(40)
+  referralCode   String            @map("referral_code") @db.VarChar(40)
+  status         ParticipantStatus @default(ACTIVE)
+  registeredAt   DateTime          @default(now()) @map("registered_at") @db.Timestamptz
+  validatedAt    DateTime?         @map("validated_at") @db.Timestamptz
+  createdAt      DateTime          @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime          @updatedAt @map("updated_at") @db.Timestamptz
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  campaign     Campaign     @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  referralClicks ReferralClick[]
+  referralsMade Referral[]  @relation("Referrer")
+  referralsReceived Referral[] @relation("Referred")
+
+  @@unique([campaignId, referralCode])
+  @@index([campaignId])
+  @@index([campaignId, phone])
+  @@index([campaignId, email])
+  @@map("participants")
+}
+
+model Referral {
+  id                     String         @id @default(uuid()) @db.Uuid
+  organizationId         String         @map("organization_id") @db.Uuid
+  campaignId             String         @map("campaign_id") @db.Uuid
+  referrerParticipantId  String         @map("referrer_participant_id") @db.Uuid
+  referredParticipantId  String?        @map("referred_participant_id") @db.Uuid
+  status                 ReferralStatus @default(PENDING)
+  eligibleAt             DateTime?      @map("eligible_at") @db.Timestamptz
+  manualReviewRequired   Boolean        @default(false) @map("manual_review_required")
+  reviewVersion          Int            @default(0) @map("review_version")
+  source                 String?        @db.VarChar(60)
+  ipHash                 String?        @map("ip_hash") @db.VarChar(128)
+  deviceHash             String?        @map("device_hash") @db.VarChar(128)
+  createdAt              DateTime       @default(now()) @map("created_at") @db.Timestamptz
+  validatedAt            DateTime?      @map("validated_at") @db.Timestamptz
+  rejectedAt             DateTime?      @map("rejected_at") @db.Timestamptz
+  rejectionReason        String?        @map("rejection_reason")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  campaign     Campaign     @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  referrer     Participant  @relation("Referrer", fields: [referrerParticipantId], references: [id], onDelete: Cascade)
+  referred     Participant? @relation("Referred", fields: [referredParticipantId], references: [id], onDelete: SetNull)
+
+  @@index([campaignId, status])
+  @@index([status, eligibleAt])
+  @@index([referrerParticipantId])
+  @@index([referredParticipantId])
+  @@map("referrals")
+}
+
+model AuditLog {
+  id             String   @id @default(uuid()) @db.Uuid
+  organizationId String?  @map("organization_id") @db.Uuid
+  userId         String?  @map("user_id") @db.Uuid
+  action         String   @db.VarChar(100)
+  entityType     String?  @map("entity_type") @db.VarChar(80)
+  entityId       String?  @map("entity_id") @db.Uuid
+  metadata       Json?
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, createdAt])
+  @@map("audit_logs")
+}
+
+model ReferralClick {
+  eventId String @id @map("event_id") @db.Uuid
+  organizationId String @map("organization_id") @db.Uuid
+  campaignId String @map("campaign_id") @db.Uuid
+  participantId String @map("participant_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  participant Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  @@index([campaignId, createdAt])
+  @@index([participantId, createdAt])
+  @@index([organizationId])
+  @@map("referral_clicks")
+}
