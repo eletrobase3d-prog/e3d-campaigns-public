@@ -1,27 +1,19 @@
-# Roadmap
+# Roadmap original
 
-Sem datas prometidas. Os itens concluídos representam validações registradas no desenvolvimento, não testes executados neste repositório documental.
+Os incrementos 3A a 3I não representam conclusão integral das macroetapas numeradas abaixo.
 
-## Marcos registrados
+| Etapa | Objetivo |
+| --- | --- |
+| 1A | Fundação: Docker, API, PostgreSQL, Redis, Prisma e health |
+| 1B | Fluxo básico de auth, campanhas, participantes, indicações e ranking |
+| 2 | SaaS: usuários, organizações, multi-tenant e permissões completas |
+| 3 | Campaign Engine: regras, datas, prêmios, duplicação e estados |
+| 4 | Referral Engine: links, cliques, validação e ranking |
+| 5 | Integração WordPress |
+| 6 | Analytics: eventos, dashboards, gráficos e funil |
+| 7 | Antifraude: score, flags, revisão e auditoria |
+| 8 | Afiliados, conversões, comissões e pagamentos |
+| 9 | Planos, assinaturas, limites e onboarding |
+| 10 | Hardening: segurança, backup, monitoramento e documentação |
 
-- [x] Sprint 2A: painel e criação de campanhas.
-- [x] Sprint 2B: edição, regras, prêmios, status e duplicação.
-- [x] Sprint 2C: página pública, cadastro, indicação e ranking.
-
-## Próximo incremento — Sprint 3A
-
-- [ ] Aplicar efetivamente `minValidityHours`.
-- [ ] Introduzir fluxo de indicações pendentes.
-- [ ] Definir e implementar validação automática e manual.
-- [ ] Contabilizar no ranking somente indicações válidas.
-- [ ] Testar transições de validade, rejeição e prevenção de dupla contagem.
-
-## Qualidade e publicação — propostas
-
-- [ ] Incorporar código original sanitizado e lockfiles revisados.
-- [ ] Registrar comandos de execução verificados e requisitos de ambiente.
-- [ ] Adicionar testes de isolamento entre organizações e acesso indevido.
-- [ ] Validar concorrência, limites, duplicidade e abuso no cadastro público.
-- [ ] Criar capturas com dados exclusivamente sintéticos.
-- [ ] Automatizar revisão de segredos e verificações de build.
-- [ ] Documentar a função efetiva do Redis e os contratos públicos da API.
+A base pública contém funcionalidades incrementais até 3I. Membros/convites, recuperação de senha, refresh, congelamento/desempate completo do ranking e outras capacidades permanecem no backlog. WordPress não foi antecipado. Prioridades de lançamento não substituem esse roadmap.

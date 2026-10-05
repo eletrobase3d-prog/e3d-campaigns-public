@@ -1,13 +1,9 @@
 # Segurança
 
-Esta edição é documental. Não há versão executável suportada ou auditoria de segurança concluída neste repositório.
+Não publique credenciais, tokens, arquivos .env, dumps, dados pessoais ou detalhes da infraestrutura privada em issues, pull requests ou screenshots.
 
-## Relatar uma vulnerabilidade
+Para comunicar uma vulnerabilidade, use o mecanismo privado de reporte do GitHub se estiver habilitado. Se não estiver disponível, solicite ao mantenedor um canal privado sem revelar detalhes exploráveis em público. Não há endereço de contato pessoal publicado neste pacote.
 
-Use a opção **Report a vulnerability** na aba **Security**, se o mantenedor tiver habilitado o relato privado. Se a opção não estiver disponível, abra apenas uma issue solicitando um canal privado, sem detalhes da falha. Não publique credenciais, dados pessoais, payloads sensíveis, logs ou endereços privados em issues ou pull requests.
+Uma credencial exposta deve ser revogada/rotacionada. Apagar o arquivo atual não remove versões do histórico. Esta exportação não verifica o histórico do repositório remoto.
 
-Após estabelecer um canal privado, informe o componente afetado, impacto e passos mínimos de reprodução com dados sintéticos. Não há prazo de resposta garantido nesta edição. Não realize testes contra ambientes reais sem autorização explícita.
-
-## Orientação ao mantenedor
-
-Habilite o relato privado antes de anunciar esse canal como disponível. Revise arquivos e histórico antes de cada publicação. Caso uma credencial tenha sido exposta, revogue ou rotacione primeiro; apagar o arquivo ou o commit não invalida cópias existentes.
+O verificador scripts/check-public.py é preventivo e heurístico, não uma garantia de ausência de segredos nem auditoria da segurança da aplicação.

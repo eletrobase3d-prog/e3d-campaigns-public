@@ -1,16 +1,11 @@
-E3D Campaigns — Aviso de publicação
+E3D Campaigns — Public portfolio snapshot
 
-Esta edição contém documentação e placeholders produzidos para o portfólio.
-Não contém o código-fonte original, dependências redistribuídas, dados de
-participantes ou configurações operacionais do ambiente privado.
+Esta edição contém código-fonte e documentação pública até a Sprint 3I.
+Não inclui dados de produção, configurações privadas nem histórico Git original.
+Os direitos sobre materiais originais permanecem com os respectivos titulares;
+a reserva de direitos está em LICENSE. Nenhum titular específico foi presumido.
 
-Os nomes das tecnologias identificam componentes descritos no desenvolvimento;
-não indicam afiliação, endosso ou transferência de direitos sobre essas marcas.
-
-Ao incorporar código, preservar os avisos de autoria e licenças existentes.
-Não substituir licenças de terceiros pela reserva de direitos da raiz.
-Registrar dependências e componentes redistribuídos em docs/third-party-notices.md.
-Confirmar a titularidade antes de adicionar um nome pessoal ou empresarial ao
-aviso de copyright. Nenhum titular foi presumido nesta edição.
-
-Referência: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository
+Dependências não são redistribuídas como node_modules. Nomes, versões e metadados
+públicos de dependências constam dos manifests/lockfiles e mantêm suas próprias
+licenças. A reserva de direitos da raiz não substitui licenças de terceiros.
+Consulte docs/third-party-notices.md. Marcas não indicam endosso ou afiliação.

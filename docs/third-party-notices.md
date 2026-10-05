@@ -1,5 +1,5 @@
 # Componentes de terceiros
 
-Esta edição não redistribui bibliotecas ou código de terceiros. Citar uma tecnologia na documentação não transfere sua licença para este repositório.
+Dependências são referenciadas por manifests e lockfiles, não vendorizadas. Cada dependência mantém sua própria licença e avisos; consultar os pacotes efetivamente instalados para uso ou redistribuição. A reserva de direitos em LICENSE aplica-se aos materiais originais, sem substituir permissões de terceiros.
 
-Quando o código for incorporado, inventariar componentes efetivamente redistribuídos, versões, origem, licença e avisos exigidos. Preservar seus arquivos LICENSE e NOTICE. Sem manifests e lockfiles originais, esse inventário ainda não pode ser concluído.
+Os lockfiles preservam URLs de registro público, integridade e metadados públicos de financiamento/licença dos pacotes. Esses metadados não são credenciais do projeto. Nenhuma licença de dependência foi reescrita.

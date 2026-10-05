@@ -1,11 +1,10 @@
-# Histórico público
+# Changelog público
 
-## 2026-09-14 — Estrutura documental inicial
+## 2026-10-05 — Snapshot Sprint 3I
 
-- README em português com resumo em inglês.
-- Arquitetura e estado documentado até a Sprint 2C.
-- Roadmap, políticas, reserva de direitos e guia de atualizações.
-- Placeholders visuais sem dados do ambiente original.
-- Diretórios reservados para o código original ainda não disponível.
+- Código-fonte incluído em apps/api e apps/web, substituindo a antiga estrutura sem implementação.
+- Incorpora validação/reavaliação, confirmações, permissões, links e cliques, UTC−3, transações administrativas, botão de link e agendamento.
+- Documentação pública renovada; documentação interna e dados operacionais excluídos.
+- Configuração local sem credenciais embutidas; verificador preventivo de publicação incluído.
 
-Verificações desta edição: integridade do ZIP, links locais e inspeção textual de informações sensíveis. Nenhum build ou teste da aplicação foi executado, pois o código não integra esta edição.
+Aceite funcional do usuário confirmado até 3H; aceite implantado da 3I ainda não informado no histórico disponível.
